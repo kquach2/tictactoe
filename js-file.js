@@ -1,9 +1,9 @@
 const Gameboard = (() => {
-    const board = new Array(9).fill("");
+    let board = new Array(9).fill("");
 
     const checkForWin = (marker) => {
-        return (board.slice(0,3) == [marker, marker, marker] || board.slice(3,6) == [marker, marker, marker] || board.slice(6,9) == [marker, marker, marker] || [board[0], board[3], board[6]] == [marker, marker, marker] || 
-        [board[1], board[4], board[7]] == [marker, marker, marker] || [board[2], board[5], board[8]] == [marker, marker, marker] || [board[0], board[4], board[8]] == [marker, marker, marker] || [board[2], board[4], board[6]] == [marker, marker, marker]);
+        return (JSON.stringify(board.slice(0,3)) == JSON.stringify([marker, marker, marker]) || JSON.stringify(board.slice(3,6)) == JSON.stringify([marker, marker, marker]) || JSON.stringify(board.slice(6,9)) == JSON.stringify([marker, marker, marker]) || JSON.stringify([board[0], board[3], board[6]]) == JSON.stringify([marker, marker, marker]) || 
+        JSON.stringify([board[1], board[4], board[7]]) == JSON.stringify([marker, marker, marker]) || JSON.stringify([board[2], board[5], board[8]]) == JSON.stringify([marker, marker, marker]) || JSON.stringify([board[0], board[4], board[8]]) == JSON.stringify([marker, marker, marker]) || JSON.stringify([board[2], board[4], board[6]]) == JSON.stringify([marker, marker, marker]));
     }
 
     const getBoard = () => {
@@ -30,8 +30,8 @@ const displayController = (() => {
 
     squares.forEach((square) => {
         square.addEventListener('click', () => {
-            if (square.textContent == "") {
-                square.textContent = gameFlow.getCurrentPlayer.mark;
+            if (square.textContent == "" && !gameOver) {
+                square.textContent = gameFlow.getCurrentPlayer().mark;
                 gameFlow.playRound(square.dataset.index);
             }
         });
@@ -44,17 +44,21 @@ const displayController = (() => {
     const setResultMessage = (winner) => {
         if (winner == 'tie') {
             messageElement.textContent = 'The game has ended in a tie!';
+            gameFlow.endGame();
         }
-        else messageElement.textContent = `${winner} is the winner!`;
+        else {
+            messageElement.textContent = `${winner} is the winner!`;
+            gameFlow.endGame();
+        }
     }
 
     restartBtn.addEventListener('click', () => {
-        currentPlayer == player1;
         Gameboard.resetBoard();
+        gameFlow.reset();
         squares.forEach((square) => {
             square.textContent = '';
         });
-        setMessage(`${currentPlayer.name}'s turn`);
+        setMessage(`${gameFlow.getCurrentPlayer().name}'s turn`);
     });
 
     return {setMessage, setResultMessage};
@@ -62,8 +66,9 @@ const displayController = (() => {
 })();
 
 const gameFlow = (() => {
-    const player1 = playerFactory('player1', 'X');
-    const player2 = playerFactory('player2','O');
+    let gameOver = false;
+    const player1 = playerFactory('Player X', 'X');
+    const player2 = playerFactory('Player O','O');
 
     let currentPlayer = player1;
 
@@ -71,9 +76,11 @@ const gameFlow = (() => {
         Gameboard.setCell(parseInt(index), currentPlayer.mark);
         if (Gameboard.checkForWin(currentPlayer.mark)) {
             displayController.setResultMessage(currentPlayer.name);
+            gameOver = true;
         }
         else if (!Gameboard.getBoard().includes("")) displayController.setResultMessage('tie');
         else {
+            console.log('Hello');
             switchPlayer();
             displayController.setMessage(`${currentPlayer.name}'s turn`);
         }
@@ -85,13 +92,21 @@ const gameFlow = (() => {
 
     const switchPlayer = () => {
         if (currentPlayer == player1) {
-            currentPlayer == player2;
+            currentPlayer = player2;
         }
-        else currentPlayer == player1;
+        else currentPlayer = player1;
     }
 
-    return {playRound, getCurrentPlayer, reset() { currentPlayer == player1; }};
+    const endGame = () => {
+        gameOver = true;
+    }
 
-});
+    const getGameOver = () => {
+        return gameOver;
+    }
+
+    return {playRound, getCurrentPlayer, endGame, getGameOver, reset() { currentPlayer = player1; gameOver = false; }};
+
+})();
 
 

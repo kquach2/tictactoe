@@ -1,0 +1,19 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#ttt-grid {
+    display: grid;
+    width: 454px;
+    height: 454px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    border: 3px solid black;
+}
+
+.square {
+    border: 3px solid black;
+}
