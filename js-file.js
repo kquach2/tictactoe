@@ -30,7 +30,7 @@ const displayController = (() => {
 
     squares.forEach((square) => {
         square.addEventListener('click', () => {
-            if (square.textContent == "" && !gameOver) {
+            if (square.textContent == "" && !gameFlow.getGameOver()) {
                 square.textContent = gameFlow.getCurrentPlayer().mark;
                 gameFlow.playRound(square.dataset.index);
             }

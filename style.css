@@ -1,8 +1,10 @@
 body {
+    font-family: Helvetica, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    background-color: lightblue;
 }
 
 #ttt-grid {
@@ -11,9 +13,36 @@ body {
     height: 454px;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    border: 3px solid black;
+    border: 1px solid black;
+    background-color: white;
 }
 
 .square {
-    border: 3px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+    font-size: 100px;
+    width: 150px;
+    height: 150px;
+}
+
+header {
+    font-size: 100px;
+    padding: 50px;
+}
+
+#message {
+    font-size: 30px;
+}
+
+#restart {
+    font-size: 30px;
+    font-family: inherit;
+    padding: 20px 40px;
+    margin: 30px;
+    color: black;
+    border: none;
+    background-color: midnightblue;
+    border-radius: 30px;
 }
